@@ -1,28 +1,26 @@
 <script setup lang="ts">
-import SprichwortComponent from './SprichwortComponent.vue';
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
+import SprichwortComponent from '../components/SprichwortComponent.vue';
 
-const dummyArrayList = [
-    {
-        "sprichwort": "Aller Anfang ist schwer.",
-        "erklaerung": "Etwas Neues zu beginnen, ist schwierig.",
-        "icon": "start"
-    },
-    {
-        "sprichwort": "Alles hat ein Ende, nur die Wurst hat zwei.",
-        "erklaerung": "Alles ist endlich.",
-        "icon": "theaters"
-    },
-    {
-        "sprichwort": "Alles hat seine Zeit.",
-        "erklaerung": "Man soll nichts \u00fcberst\u00fcrzen.",
-        "icon": "hourglass_empty"
-    },
-    {
-        "sprichwort": "Allzu viel ist ungesund.",
-        "erklaerung": "\u00dcbertreibung ist schlecht.",
-        "icon": "warning"
+
+onMounted(() => {
+    getMatch();
+});
+
+const error = ref()
+
+const sprichwortMatch = ref()
+
+const getMatch = async () => {
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_APP_BASEURL}/match`);
+        sprichwortMatch.value = response.data; // Assign the API response
+    } catch (err) {
+        error.value = (err as Error).message; // Handle the error
+        console.error('API Error:', err);
     }
-]
+}
 
 
 </script>
@@ -33,9 +31,10 @@ const dummyArrayList = [
             Welches Sprichwort ist cooler?
         </h3>
     </div>
-    <div class="sprichwort-container">
-        <SprichwortComponent v-for="(itemDumy, index) in dummyArrayList" :key="index" :content=itemDumy.sprichwort
-            :explanation=itemDumy.erklaerung :icon=itemDumy.icon />
+
+    <div class="vote-container">
+        <SprichwortComponent v-for="(item, index) in sprichwortMatch" :key="index" :content="item.content"
+            :explanation="item.explanation" :icon="item.icon" />
     </div>
 </template>
 
