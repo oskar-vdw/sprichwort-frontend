@@ -12,6 +12,8 @@ const error = ref()
 
 const sprichwortMatch = ref()
 
+
+
 const getMatch = async () => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_APP_BASEURL}/match`);
@@ -22,20 +24,39 @@ const getMatch = async () => {
     }
 }
 
+const processVote = async (idOfWinner: number, index: number) => {
+    const idOfLoser = sprichwortMatch.value[1 - index].id
+    try {
+        const response = await axios.post(`${import.meta.env.VITE_APP_BASEURL}/processvote`, { idOfWinner: idOfWinner, idOfLoser: idOfLoser });
+        //  sprichwortMatch.value = response.data; // Assign the API response
+        console.log(response.data)
+
+        getMatch()
+
+    } catch (err) {
+        error.value = (err as Error).message; // Handle the error
+        console.error('API Error:', err);
+        alert(err)
+    }
+}
+
 
 </script>
 
 <template>
     <div class="greetings">
-        <h3>
+        <h2>
             Welches Sprichwort ist cooler?
-        </h3>
+        </h2>
     </div>
 
     <div class="vote-container">
         <SprichwortComponent v-for="(item, index) in sprichwortMatch" :key="index" :content="item.content"
-            :explanation="item.explanation" :icon="item.icon" />
+            :explanation="item.explanation" :icon="item.icon" :list="false" :rank="0"
+            @click="processVote(item.id, index)" />
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+h2 {}
+</style>
