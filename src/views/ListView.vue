@@ -38,7 +38,7 @@ const getList = async () => {
 </script>
 
 <template>
-    <h3>Die geordnete Liste aller Sprichwörter</h3>
+    <h3>Alle Sprichwörter, geordnet danach wie cool sie sinds</h3>
     <!--     <button @click="fetchData"> Fetch</button>
     <p>{{ data }}</p>
     <p v-if="error">{{ error }}</p> -->

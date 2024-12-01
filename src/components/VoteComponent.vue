@@ -12,8 +12,6 @@ const error = ref()
 
 const sprichwortMatch = ref()
 
-
-
 const getMatch = async () => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_APP_BASEURL}/match`);
